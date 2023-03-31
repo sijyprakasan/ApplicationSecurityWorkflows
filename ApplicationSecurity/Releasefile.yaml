@@ -1,6 +1,6 @@
 # Exported from:        http://ip-172-31-23-1.ap-south-1.compute.internal:5516/
 # Release version:      23.1.0-331.113
-# Date created:         Fri Mar 31 12:13:59 UTC 2023
+# Date created:         Fri Mar 31 12:25:44 UTC 2023
 
 ---
 apiVersion: xl-release/v1
@@ -13,11 +13,12 @@ spec:
   phases:
   - phase: New Phase
     tasks:
-    - name: App Protection Github Actions Parser
+    - name: App Security Github Actions Parser
       type: opa.ParseGithubActionsLog
+      opaServer: opaserver
       applicationType: Android
       username: mykolasvolkus
-      gitPAT: !value "opa_ParseGithubActionsLog_App_Protection_Github_Actions_Parser_gitPAT"
+      gitPAT: !value "opa_ParseGithubActionsLog_App_Security_Github_Actions_Parser_gitPAT"
       repositoryName: AndroidAppProtectionTest
       runId: "4561561254"
       variableMapping:
@@ -25,6 +26,7 @@ spec:
         pythonScript.jsonInput: "${opaOutPut}"
     - name: Evaluate Policy Check
       type: opa.EvaluatePolicy
+      opaServer: opaserver
       jsonInputForEvaluation: "${opaOutPut}"
       policyName: AppProtectionJsonPolicy
       expectedOutput: "{\"result\":{\"allow\":true,\"deny\":[]}}"
