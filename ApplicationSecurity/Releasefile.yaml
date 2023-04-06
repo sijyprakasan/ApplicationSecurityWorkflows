@@ -1,6 +1,6 @@
 # Exported from:        http://ip-172-31-23-1.ap-south-1.compute.internal:5516/
 # Release version:      23.1.0-331.113
-# Date created:         Fri Mar 31 12:34:27 UTC 2023
+# Date created:         Thu Apr 06 08:56:13 UTC 2023
 
 ---
 apiVersion: xl-release/v1
@@ -48,6 +48,44 @@ spec:
     showOnReleaseStart: false
     value: !value "xlrelease_PasswordStringVariable_githubpat_value"
   riskProfile: Default risk profile
+- template: App Security Developer Check (Android) - Jenkins
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: App security  Jenkins Parser
+      type: opa.ParseJenkinsLog
+      opaServer: opaserver
+      applicationType: Android
+      jenkinsServer: jenkinsserver
+      apiToken: !value "opa_ParseJenkinsLog_App_security__Jenkins_Parser_apiToken"
+      jobUrl: http://43.205.232.54:8080/job/freestyle/5/
+      variableMapping:
+        pythonScript.jsonInput: "${inputPolicyJson}"
+    - name: Evaluate Policy Check
+      type: opa.EvaluatePolicy
+      opaServer: opaserver
+      jsonInputForEvaluation: "${inputPolicyJson}"
+      policyName: AppProtectionJsonPolicy
+      expectedOutput: "{\"result\":{\"allow\":true,\"deny\":[]}}"
+    - name: Deploy The Application
+      type: xlrelease.ScriptTask
+      script: print("Deploying the application")
+  variables:
+  - type: xlrelease.StringVariable
+    key: inputPolicyJson
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: opaOutPut
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.PasswordStringVariable
+    key: githubpat
+    requiresValue: false
+    showOnReleaseStart: false
+    value: !value "xlrelease_PasswordStringVariable_githubpat_value_0"
+  riskProfile: Default risk profile
 - template: App Security Developer Check (IOS)
   description: App Security Developer Check (IOS) for IOS applicaiton
   scheduledStartDate: 2023-03-31T03:30:00Z
@@ -68,7 +106,7 @@ spec:
       type: opa.EvaluatePolicy
       opaServer: opaserver
       jsonInputForEvaluation: "${opaOutPut}"
-      policyName: AppProtectionJsonPolicy
+      policyName: IosAppProtectionJsonPolicy
       expectedOutput: "{\"result\":{\"allow\":true,\"deny\":[]}}"
     - name: Deploy The Application
       type: xlrelease.ScriptTask
@@ -86,7 +124,7 @@ spec:
     key: githubpat
     requiresValue: false
     showOnReleaseStart: false
-    value: !value "xlrelease_PasswordStringVariable_githubpat_value_0"
+    value: !value "xlrelease_PasswordStringVariable_githubpat_value_1"
   riskProfile: Default risk profile
 - notifications:
   - notification: TASK_OVERDUE
