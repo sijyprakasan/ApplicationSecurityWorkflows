@@ -1,0 +1,18 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      23.1.0-412.1104
+# Date created:         Wed Apr 19 11:56:59 UTC 2023
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  home: ApplicationSecurity
+spec:
+- name: jenkinsserver
+  type: jenkins.Server
+  url: http://43.205.232.54:8080/
+  username: admin
+- name: opaserver
+  type: opa.Server
+  url: http://43.205.232.54:8181/
+  authenticationMethod: None

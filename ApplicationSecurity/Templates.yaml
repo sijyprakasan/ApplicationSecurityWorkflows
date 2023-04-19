@@ -1,0 +1,150 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      23.1.0-412.1104
+# Date created:         Wed Apr 19 11:56:59 UTC 2023
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  home: ApplicationSecurity
+spec:
+- template: App Security Developer Check (Android)
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  dueDate: 2023-03-31T04:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: Check Completed waittime
+      type: xlrelease.ScriptTask
+      script: |-
+        import time
+        time.sleep(15)
+    - name: App Security Github Actions Parser
+      type: opa.ParseGithubActionsLog
+      opaServer: opaserver
+      applicationType: Android
+      username: mykolasvolkus
+      repositoryName: AndroidAppProtectionTest
+      runId: "${WORKFLOWID}"
+      variableMapping:
+        pythonScript.gitPAT: "${githubpat}"
+        pythonScript.jsonInput: "${opaOutPut}"
+    - name: Evaluate Policy Check
+      type: opa.EvaluatePolicy
+      opaServer: opaserver
+      jsonInputForEvaluation: "${opaOutPut}"
+      policyName: AppProtectionJsonPolicy
+      expectedOutput: "{\"result\":{\"allow\":true,\"deny\":[]}}"
+    - name: Deploy The Application
+      type: xlrelease.ScriptTask
+      script: print("Deploying the application")
+  variables:
+  - type: xlrelease.StringVariable
+    key: inputPolicyJson
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: opaOutPut
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.PasswordStringVariable
+    key: githubpat
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: WORKFLOWID
+    requiresValue: false
+    showOnReleaseStart: false
+    label: WORKFLOWID
+  riskProfile: Default risk profile
+- template: App Security Developer Check (Android) - Jenkins
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  dueDate: 2023-03-31T04:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: Chec Completed Waittime
+      type: xlrelease.ScriptTask
+      script: |-
+        import time
+        time.sleep(15)
+    - name: App security  Jenkins Parser
+      type: opa.ParseJenkinsLog
+      opaServer: opaserver
+      applicationType: Android
+      jenkinsServer: jenkinsserver
+      jobUrl: http://43.205.232.54:8080/job/freestyle/5/
+      variableMapping:
+        pythonScript.jsonInput: "${inputPolicyJson}"
+    - name: Evaluate Policy Check
+      type: opa.EvaluatePolicy
+      opaServer: opaserver
+      jsonInputForEvaluation: "${inputPolicyJson}"
+      policyName: AppProtectionJsonPolicy
+      expectedOutput: "{\"result\":{\"allow\":true,\"deny\":[]}}"
+    - name: Deploy The Application
+      type: xlrelease.ScriptTask
+      script: print("Deploying the application")
+  variables:
+  - type: xlrelease.StringVariable
+    key: inputPolicyJson
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: opaOutPut
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.PasswordStringVariable
+    key: githubpat
+    requiresValue: false
+    showOnReleaseStart: false
+  riskProfile: Default risk profile
+- template: App Security Developer Check (IOS)
+  description: App Security Developer Check (IOS) for IOS applicaiton
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  dueDate: 2023-03-31T04:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: Check Completed Waittime
+      type: xlrelease.ScriptTask
+      script: |-
+        import time
+        time.sleep(15)
+    - name: App Security Github Actions Parser
+      type: opa.ParseGithubActionsLog
+      opaServer: opaserver
+      username: mykolasvolkus
+      repositoryName: AndroidAppProtectionTest
+      runId: "${WORKFLOWID}"
+      variableMapping:
+        pythonScript.gitPAT: "${githubpat}"
+        pythonScript.jsonInput: "${opaOutPut}"
+    - name: Evaluate Policy Check
+      type: opa.EvaluatePolicy
+      opaServer: opaserver
+      jsonInputForEvaluation: "${opaOutPut}"
+      policyName: IosAppProtectionJsonPolicy
+      expectedOutput: "{\"result\":{\"allow\":true,\"deny\":[]}}"
+    - name: Deploy The Application
+      type: xlrelease.ScriptTask
+      script: print("Deploying the application")
+  variables:
+  - type: xlrelease.StringVariable
+    key: inputPolicyJson
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: opaOutPut
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.PasswordStringVariable
+    key: githubpat
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: WORKFLOWID
+    requiresValue: false
+    showOnReleaseStart: false
+    label: WORKFLOWID
+  riskProfile: Default risk profile
