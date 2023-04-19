@@ -1,0 +1,79 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      23.1.0-412.1104
+# Date created:         Wed Apr 19 11:51:07 UTC 2023
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  home: OPA Management
+spec:
+- template: Create and Get policy
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  dueDate: 2023-03-31T04:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: Create Policy
+      type: opa.CreatePolicy
+      opaServer: opaserver
+      policyName: AppProtectionJsonPolicy
+      gitFileUrl: https://raw.githubusercontent.com/nitheshrayuduv/OPApolicies/main/AppProtectionJsonPolicy
+      variableMapping:
+        pythonScript.gitPAT: "${gitpat}"
+    - name: Get Policy
+      type: opa.GetPolicy
+      opaServer: opaserver
+      policyName: AppProtectionJsonPolicy
+  variables:
+  - type: xlrelease.PasswordStringVariable
+    key: gitpat
+    requiresValue: false
+    showOnReleaseStart: false
+  riskProfile: Default risk profile
+- template: Create and Get policy - IOS
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  dueDate: 2023-03-31T04:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: Create Policy
+      type: opa.CreatePolicy
+      opaServer: opaserver
+      policyName: IosAppProtectionJsonPolicy
+      gitFileUrl: https://raw.githubusercontent.com/nitheshrayuduv/OPApolicies/main/IosAppProtectionJsonPolicy
+      variableMapping:
+        pythonScript.gitPAT: "${gitpat}"
+    - name: Get Policy
+      type: opa.GetPolicy
+      opaServer: opaserver
+      policyName: IosAppProtectionJsonPolicy
+  variables:
+  - type: xlrelease.PasswordStringVariable
+    key: gitpat
+    requiresValue: false
+    showOnReleaseStart: false
+  riskProfile: Default risk profile
+- template: Update and Get Template
+  scheduledStartDate: 2023-03-31T03:30:00Z
+  dueDate: 2023-03-31T04:30:00Z
+  phases:
+  - phase: New Phase
+    tasks:
+    - name: Update Policy
+      type: opa.UpdatePolicy
+      opaServer: opaserver
+      policyName: AppProtectionJsonPolicy
+      gitFileUrl: https://raw.githubusercontent.com/nitheshrayuduv/OPApolicies/main/AppProtectionJsonPolicy
+      variableMapping:
+        pythonScript.gitPAT: "${gitpat}"
+    - name: Get Policy
+      type: opa.GetPolicy
+      opaServer: opaserver
+      policyName: AppProtectionJsonPolicy
+  variables:
+  - type: xlrelease.PasswordStringVariable
+    key: gitpat
+    requiresValue: false
+    showOnReleaseStart: false
+  riskProfile: Default risk profile
