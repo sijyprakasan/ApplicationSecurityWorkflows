@@ -1,14 +1,16 @@
-# Exported from:        http://host.docker.internal:5516/
-# Release version:      23.1.0-412.1104
-# Date created:         Wed Apr 19 11:51:07 UTC 2023
+# Exported from:        http://MacBookPro16.local:5516/
+# Release version:      23.3.0-beta.1
+# Date created:         Mon Jun 19 23:39:00 AEST 2023
 
 ---
 apiVersion: xl-release/v1
 kind: Templates
 metadata:
-  home: OPA Management
+  home: OpaManagementTasks
 spec:
-- name: opaserver
-  type: opa.Server
-  url: http://43.205.232.54:8181/
-  authenticationMethod: None
+- name: Workflows
+  type: xlrelease.GitHubScmConnectorConfig
+  repository: sijyprakasan/Workflows
+  credential:
+    type: xlrelease.GitHubOAuth2Token
+    token: !value "xlrelease_GitHubOAuth2Token_token"
